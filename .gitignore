@@ -1,0 +1,12 @@
+# Dữ liệu
+data/
+models/*.pkl
+
+# Môi trường ảo
+venv/
+.env
+
+# File rác hệ thống
+.DS_Store
+__pycache__/
+*.ipynb_checkpoints/
