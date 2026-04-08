@@ -26,11 +26,3 @@ Dự án tập trung vào việc phái sinh các biến số có ý nghĩa kinh 
 ## 📚 Tài liệu tham khảo
 * Gupta, S., & Lehmann, D. R. (2003). Customers as assets. *Journal of Interactive Marketing*.
 * Quyết định 2345/QĐ-NHNN về an toàn, bảo mật trong thanh toán trực tuyến.
-
----
-
-### 💡 Mẹo nhỏ cho Đăng:
-* **Cách viết:** Trong Markdown, các dòng có dấu `#` là tiêu đề lớn, `##` là tiêu đề nhỏ. 
-* **Tư duy DA:** Khi nhà tuyển dụng hoặc giảng viên nhìn vào README này, họ sẽ thấy bạn không chỉ biết code mà còn hiểu về **CLV**, **Quyết định 2345** và **Quản trị rủi ro**. Đây chính là "điểm chạm" quan trọng để bạn khác biệt so với các ứng viên chỉ học kỹ thuật thuần túy.
-
-Đăng thấy nội dung này đã đủ "pro" chưa? Nếu muốn thêm phần hướng dẫn cài đặt (`Installation`) để người khác có thể chạy thử code của bạn, hãy bảo mình nhé!
