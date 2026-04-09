@@ -44,19 +44,39 @@ def load_paysim_data(file_path):
     return df
 
 
-def get_sample_data(df, fraud_df, non_fraud_df]):
+def get_sample_data(df):
+    '''
+    Hàm lấy mẫu cân bằng dữ liệu
+    '''
     fraud_df = df[df['isFraud'] == 1] # Lấy toàn bộ dòng gian lận
-    non_fraud_df = df[df['isFraud' ==0]] # Lấy toàn bộ dòng bình thường
+    non_fraud_df = df[df['isFraud'] ==0] # Lấy toàn bộ dòng bình thường
 
     # Lấy mẫu ngẫu nhiên 24000 giao dịch bình thường
+    n_sample = min(len(non_fraud_df), 24000)
+    non_fraud_sample  = non_fraud_df.sample(n=n_sample, random_state=42)
     
+    # Gộp nhóm gian lận và nhóm bình thường đã lấy mẫu lại thành một DataFrame
+    balanced_df = pd.concat([fraud_df, non_fraud_sample])
+    
+    # Xáo trộn dữ liệu để các dòng gian lận không nằm tập trung ở đầu
+    balanced_df = balanced_df.sample(frac=1, random_state=42).reset_index(drop=True)
 
-
+    print(f"---Đã tạo tập dữ liệu mẫu: {len(balanced_df)} dòng ---")
+    return balanced_df
 
 if __name__ == "__main":
     path = 'D:/Công việc/DA + DE/Book DA/Data Science for Business/PaySim/fraud-detection-paysim\data/raw/Synthetic_Financial_datasets_log.csv'
+    
     try:
-        data = load_paysim_data(path)
-        print(data.head())
+        
+        data = load_paysim_data(path) # load và tối ư
+        
+        balanced_data = get_sample_data(data) # lấy mẫu cân bằng
+        print("\5 dòng đầu của dữ liệu đã cân bằng:")
+        print(balanced_data.head())
+
+        print("\n Tỷ lệ các lớp trong tập mẫu:") # kiểm tra tỷ lệ gian lận
+        print(balanced_data['isFraud'].value_counts(normalize=True))
+    
     except Exception as e:
         print(f"Lỗi: {e}")
