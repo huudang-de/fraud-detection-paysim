@@ -10,10 +10,10 @@ def load_paysim_data(file_path):
 
     df = pd.read_csv(file_path)
 
-    start_mem = df.memory_usage().sum() /1024**2
-    print(f"Bộ nhớ tiêu thụ ban đầu: {start_mem:.2f} MB")
-
     # Tối ưu hóa kiểu dữ liệu
+    start_mem = df.memory_usage().sum() / 1024**2
+    print(f"Bộ nhớ tiêu thụ ban đầu: {start_mem:.2f} MB")
+    
     for col in df.columns:
         col_type = df[col].dtype
 
@@ -37,10 +37,10 @@ def load_paysim_data(file_path):
             if col == 'type':
                 df[col]=df[col].astype('category') # ép cột chuỗi(type) về category
     
-    end_men = df.memory_usage().sum() / 1024**2
-    print(f"Bộ nhớ tiêu thụ sau tối ưu: {end_men:.2f} MB")
-    print(f"Tiết kiệm được: {100 *(start_mem - end_men)/ start_mem:.1f}")
-    
+    end_mem = df.memory_usage().sum() / 1024**2
+    print(f"Bộ nhớ tiêu thụ sau tối ưu: {end_mem:.2f} MB")
+    print(f"Tiết kiệm được: {100 * (start_mem - end_mem) / start_mem:.1f}%")
+
     return df
 
 
@@ -64,8 +64,8 @@ def get_sample_data(df):
     print(f"---Đã tạo tập dữ liệu mẫu: {len(balanced_df)} dòng ---")
     return balanced_df
 
-if __name__ == "__main":
-    path = 'D:/Công việc/DA + DE/Book DA/Data Science for Business/PaySim/fraud-detection-paysim\data/raw/Synthetic_Financial_datasets_log.csv'
+if __name__ == "__main__":
+    path = r'D:/Công việc/DA + DE/Book DA/Data Science for Business/PaySim/fraud-detection-paysim\data/raw/Synthetic_Financial_datasets_log.csv'
     
     try:
         
