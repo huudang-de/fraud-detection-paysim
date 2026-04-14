@@ -11,46 +11,34 @@ def build_fratures(df):
     -Nhắm vào tài khoản nhận “rỗng” hoặc mới tạo
     -Phá vỡ logic số dư để qua mặt hệ thống kiểm soát
     -Không bị phát hiện bởi rule-based system 
+    --> Xét T0 
     '''
     df = df.copy()
 
     #Tập trung vào TRANSFER,CASH_OUT
-    df['is_transfer'] = (df['type'] == 'TRANSFER').astype(int)
-    df['is_cashout'] = (df['type'] == 'CASH_OUT').astype(int)
-
-    df['is_high_risk_type'] = df['type'].isin(['TRANSFER', 'CASH_OUT'])
+    df['is_high_risk_type'] = df['type'].isin(['TRANSFER', 'CASH_OUT']).astype(int)
 
     #Giá trị giao dịch lớn
     df['log_amount'] = np.log1p(df['amount'])
 
-    q95 = df['amount'].quantile(0.95)
-    q90 = df['amount'].quantile(0.90)
-
-    df['is_large_amount'] = (df['amount'] > q95).astype(int)
-    df['large_transfer'] = (df['type'] == 'TRANSFER' & (df['amount'] > q90)).astype(int)
-
-
-    #Hoạt động liên tục (không theo thời gian sinh học)
+    #Hoạt động liên tục (không theo thời gian sinh học) --> Fraud cao vào đêm khuya
     df['hour'] = df['step'] % 24
     df['is_night'] = ((df['hour'] < 6) | (df['hour'] > 22)).astype(int)
 
     #Nhắm vào tài khoản nhận “rỗng” hoặc mới tạo
     df['is_dest_zero_balance'] = (df['oldbalanceDest'] == 0).astype(int)
-
-    #Phá vỡ logic số dư để qua mặt hệ thống kiểm soát
-    df['orig_error'] = (df['oldbalanceOrg'] - df['amount'] - df['newbalanceOrig'])
-    df['dest_error'] = (df['oldbalanceDest'] + df['amount'] - df['newbalanceDest'])
-    df['is_balance_error'] = ((df['orig_error'] != 0) | (df['dest_error'] != 0)).astype(int)
     
     #Tương tác high risk type + zero balance
-    df['high_risk_combo'] = (df['is_high_risk_type'] == 1 & (df['is_dest_zero_balance'] == 1)).astype(int)
+    df['high_risk_combo'] = df['is_high_risk_type'] * df['is_dest_zero_balance'] * df['is_night']
 
-    #Xóa cột ID columns
-    df = df.drop(columns=['nameOrig', 'nameDest'], errors='ignore')
+    #Xóa cột không dùng hay là thông tin quá khứ
+    df = df.drop(columns=['nameOrig', 'nameDest','type','newbalanceOrig', 'newbalanceDest', # Gây leakage
+        'isFlaggedFraud','oldbalanceOrg', 'step'], errors='ignore')
 
-    return 
+    return df
 
 def split_xy(df):
     X = df.drop(columns=['isFraud'])
     y = df['isFraud']
     return X,y
+
