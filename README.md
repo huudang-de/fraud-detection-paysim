@@ -1,28 +1,33 @@
-# 📊 Fraud Detection System: Tối ưu hóa Giá trị kỳ vọng (EV) trong Thanh toán số
+Dự án: Hệ thống phát hiện gian lận thanh toán số tối ưu hóa Giá trị kỳ vọng (EV)
 
-## 📝 Giới thiệu dự án
-Dự án này tập trung vào việc xây dựng hệ thống phát hiện gian lận dựa trên dữ liệu mô phỏng **PaySim**. Khác với các mô hình Machine Learning thuần túy chỉ tối ưu hóa độ chính xác kỹ thuật (Accuracy), hệ thống này được thiết kế để giải quyết bài toán kinh tế cốt lõi trong ngành Ngân hàng: **Cân bằng giữa An toàn bảo mật và Trải nghiệm người dùng (Frictionless CX).**
+Lĩnh vực: Fintech / Ngân hàng số / Quản trị rủi ro.
 
-## 🎯 Mục tiêu chiến lược
-1. **Tối ưu hóa Giá trị kỳ vọng (Expected Value - EV):** Áp dụng lý thuyết của *Provost & Fawcett (2013)* để xây dựng ma trận chi phí bất đối xứng, tích hợp **Giá trị vòng đời khách hàng (CLV)** vào ngưỡng ra quyết định.
-2. **Tuân thủ Pháp lý (Compliance):** Tích hợp logic kiểm soát theo **Quyết định 2345/QĐ-NHNN** của Ngân hàng Nhà nước Việt Nam về xác thực sinh trắc học đối với giao dịch trên 10 triệu VNĐ.
-3. **Giảm thiểu Ma sát (Friction Reduction):** Phân bổ linh hoạt các điểm ma sát (OTP, FaceID, Call xác thực) dựa trên xác suất rủi ro thay vì chặn giao dịch một cách máy móc.
+1. Tóm lược mục tiêu (Impact-driven Summary)
 
-## 🛠️ Kỹ thuật Đặc trưng (Feature Engineering)
-Dự án tập trung vào việc phái sinh các biến số có ý nghĩa kinh tế cao từ tập dữ liệu PaySim:
-* **Account Depletion Ratio:** Tỷ lệ số tiền giao dịch trên số dư tài khoản (nhận diện hành vi vét cạn tiền).
-* **Temporal Features:** Phân tích chu kỳ giao dịch theo giờ trong ngày để phát hiện các truy cập bất thường vào khung giờ nhạy cảm.
-* **Error Balance Logic:** Kiểm tra tính cân đối kế toán giữa tài khoản nguồn và tài khoản đích để phát hiện lỗi hệ thống hoặc can thiệp dữ liệu trái phép.
+Xây dựng mô hình Machine Learning phát hiện giao dịch gian lận trên tập dữ liệu PaySim (6.3 triệu bản ghi), giúp tiết kiệm 77% chi phí rủi ro so với hệ thống dựa trên quy luật (Rule-based) truyền thống. Dự án tích hợp ma trận chi phí bất đối xứng nhằm cân bằng giữa An toàn bảo mật và Trải nghiệm khách hàng (CX).
 
-## 🚀 Cấu trúc dự án
-```text
-├── data/           # Raw & Processed data (PaySim)
-├── notebooks/      # EDA & Model Experiments
-├── src/            # Production code (Feature Eng, Scoring)
-├── models/         # Saved models (Random Forest, XGBoost)
-└── reports/        # Analysis & Visualizations
-```
+2. Các kỹ năng & Công cụ sử dụng (Keywords cho ATS)
 
-## 📚 Tài liệu tham khảo
-* Gupta, S., & Lehmann, D. R. (2003). Customers as assets. *Journal of Interactive Marketing*.
-* Quyết định 2345/QĐ-NHNN về an toàn, bảo mật trong thanh toán trực tuyến.
+.Ngôn ngữ/Thư viện: Python (Pandas, NumPy), Scikit-learn, XGBoost, LightGBM, Matplotlib, Seaborn.
+
+.Kỹ thuật dữ liệu: Xử lý dữ liệu lớn (Big Data), Tối ưu hóa bộ nhớ (giảm 53.4% dung lượng RAM), Xử lý dữ liệu mất cân bằng (RUS).
+
+.Nghiệp vụ: Phân tích Giá trị vòng đời khách hàng (CLV), Ma trận Giá trị kỳ vọng (EV), Quyết định 2345/QĐ-NHNN.
+
+3. Các đóng góp chính (Key Contributions)
+.Tối ưu hóa dữ liệu: Chuyển đổi kiểu dữ liệu (Downcasting) giúp giảm dung lượng file từ 533MB xuống 248MB mà không làm mất đi tính chính xác của mô hình.
+
+.Kỹ sư đặc trưng (Feature Engineering): Thiết kế các biến chuyên sâu như:
+    .Account Depletion Ratio: Nhận diện hành vi vét cạn tài khoản.
+    .Temporal Features: Phân tích chu kỳ sinh học và khung giờ "vàng" của tội phạm (23h - 4h).
+    .Logic Validation: Phát hiện sai số logic kế toán giữa số dư đầu và cuối kỳ.
+
+.Phát triển mô hình: Thử nghiệm nhiều thuật toán (Random Forest, XGBoost, LightGBM). Mô hình LightGBM đạt kết quả tốt nhất với AP = 0.856.
+
+.Tư duy kinh tế trong AI: Thay đổi ngưỡng quyết định (Threshold) dựa trên CLV để giảm thiểu việc "chặn nhầm" khách hàng VIP, tối ưu hóa lợi nhuận thực tế thay vì chỉ chạy theo độ chính xác (Accuracy) đơn thuần.
+
+4. Kết quả định lượng (Measurable Results)
+.Hiệu quả tài chính: Tiết kiệm được ~1.8 tỷ VNĐ chi phí rủi ro (giảm 77% so với hệ thống cũ).
+.Tối ưu vận hành: Đề xuất chiến lược "Ma sát đa tầng" (Friction Points):
+    .65.88% giao dịch được phê duyệt tự động.
+    .Tích hợp xác thực sinh thực học cho các giao dịch rủi ro hoặc trên 10 triệu VNĐ theo đúng Quyết định 2345/QĐ-NHNN.
