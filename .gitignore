@@ -10,3 +10,7 @@ venv/
 .DS_Store
 __pycache__/
 *.ipynb_checkpoints/
+
+# Markdown files (trừ README.md)
+*.md
+!README.md

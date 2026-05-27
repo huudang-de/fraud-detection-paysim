@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-def build_fratures(df):
+def build_features(df):
     '''
     Xây dựng các tính năng cho mô hình phát hiện gian lận
     Dựa trên phân tích dữ liệu khám phá (EDA):
