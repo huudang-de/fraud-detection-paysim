@@ -1,33 +1,112 @@
-Dự án: Hệ thống phát hiện gian lận thanh toán số tối ưu hóa Giá trị kỳ vọng (EV)
+# PaySim Fraud Detection
 
-Lĩnh vực: Fintech / Ngân hàng số / Quản trị rủi ro.
+Machine learning project for real-time payment fraud detection on the PaySim synthetic transaction dataset.
 
-1. Tóm lược mục tiêu (Impact-driven Summary)
+This repository was audited for data leakage. The current modeling notebook uses a T0-safe feature whitelist, chronological train/test split, profit-curve threshold optimization, and ROC/Lift monitoring.
 
-Xây dựng mô hình Machine Learning phát hiện giao dịch gian lận trên tập dữ liệu PaySim (6.3 triệu bản ghi), giúp tiết kiệm 77% chi phí rủi ro so với hệ thống dựa trên quy luật (Rule-based) truyền thống. Dự án tích hợp ma trận chi phí bất đối xứng nhằm cân bằng giữa An toàn bảo mật và Trải nghiệm khách hàng (CX).
+## Current Results
 
-2. Các kỹ năng & Công cụ sử dụng (Keywords cho ATS)
+These results come from `notebooks/03_modeling.ipynb` after removing leakage-prone raw balance columns and replacing random split with a chronological split.
 
-.Ngôn ngữ/Thư viện: Python (Pandas, NumPy), Scikit-learn, XGBoost, LightGBM, Matplotlib, Seaborn.
+| Metric | Value |
+|---|---:|
+| Test fraud base rate | 0.747% |
+| LightGBM ROC-AUC | 0.9036 |
+| LightGBM Average Precision | 0.3955 |
+| Lift @ top 10% | 7.49x |
+| Fraud capture @ top 10% | 74.87% |
+| Lift @ top 20% | 4.25x |
+| Fraud capture @ top 20% | 84.94% |
+| Profit-curve threshold | 0.99290966 |
+| Model alert rate | 0.2242% |
+| Saving vs rule baseline | 1.52B VND, 22.73% |
 
-.Kỹ thuật dữ liệu: Xử lý dữ liệu lớn (Big Data), Tối ưu hóa bộ nhớ (giảm 53.4% dung lượng RAM), Xử lý dữ liệu mất cân bằng (RUS).
+The previous claim `AP=0.856` and `77% cost savings` is deprecated. It was based on a pipeline that mixed target-aware sampling/evaluation bias and leakage-prone balance fields.
 
-.Nghiệp vụ: Phân tích Giá trị vòng đời khách hàng (CLV), Ma trận Giá trị kỳ vọng (EV), Quyết định 2345/QĐ-NHNN.
+## Modeling Pipeline
 
-3. Các đóng góp chính (Key Contributions)
-.Tối ưu hóa dữ liệu: Chuyển đổi kiểu dữ liệu (Downcasting) giúp giảm dung lượng file từ 533MB xuống 248MB mà không làm mất đi tính chính xác của mô hình.
+1. Load PaySim raw data.
+2. Filter scoring scope using T0-available fields: `TRANSFER`/`CASH_OUT` and customer destinations.
+3. Split by transaction time (`step`) so the test set is strictly later than train.
+4. Balance only the training set.
+5. Build model features with a whitelist from `src.features.MODEL_FEATURE_COLUMNS`.
+6. Train RF, XGBoost, and LightGBM.
+7. Evaluate on production-like chronological test data.
+8. Select deployment threshold with a profit curve.
+9. Monitor model ranking quality with ROC and Lift curves.
 
-.Kỹ sư đặc trưng (Feature Engineering): Thiết kế các biến chuyên sâu như:
-    .Account Depletion Ratio: Nhận diện hành vi vét cạn tài khoản.
-    .Temporal Features: Phân tích chu kỳ sinh học và khung giờ "vàng" của tội phạm (23h - 4h).
-    .Logic Validation: Phát hiện sai số logic kế toán giữa số dư đầu và cuối kỳ.
+## T0-Safe Features
 
-.Phát triển mô hình: Thử nghiệm nhiều thuật toán (Random Forest, XGBoost, LightGBM). Mô hình LightGBM đạt kết quả tốt nhất với AP = 0.856.
+Current model features:
 
-.Tư duy kinh tế trong AI: Thay đổi ngưỡng quyết định (Threshold) dựa trên CLV để giảm thiểu việc "chặn nhầm" khách hàng VIP, tối ưu hóa lợi nhuận thực tế thay vì chỉ chạy theo độ chính xác (Accuracy) đơn thuần.
+- `amount`
+- `is_high_risk_type`
+- `log_amount`
+- `hour`
+- `is_night`
+- `is_dest_zero_balance`
+- `high_risk_combo`
 
-4. Kết quả định lượng (Measurable Results)
-.Hiệu quả tài chính: Tiết kiệm được ~1.8 tỷ VNĐ chi phí rủi ro (giảm 77% so với hệ thống cũ).
-.Tối ưu vận hành: Đề xuất chiến lược "Ma sát đa tầng" (Friction Points):
-    .65.88% giao dịch được phê duyệt tự động.
-    .Tích hợp xác thực sinh thực học cho các giao dịch rủi ro hoặc trên 10 triệu VNĐ theo đúng Quyết định 2345/QĐ-NHNN.
+Raw balance fields are intentionally blocked from the model frame:
+
+- `oldbalanceOrg`
+- `newbalanceOrig`
+- `oldbalanceDest`
+- `newbalanceDest`
+- `isFlaggedFraud`
+
+`is_dest_zero_balance` is retained as a business hypothesis, but in production it must be backed by a pre-authorization balance snapshot. If that snapshot is not available at decision time, this feature must be replaced with safer account-history features such as prior transaction count, account age, or first-seen indicators.
+
+## Business Evaluation
+
+The current cost matrix is cost-only:
+
+- False negative: missed fraud amount is lost.
+- False positive: operational/customer-friction cost is paid.
+- True positive is not counted again as positive benefit, which avoids TP/FN double counting.
+
+Current optimized threshold result:
+
+| Item | Value |
+|---|---:|
+| Approve-all loss | 6.74B VND |
+| Rule-based loss | 6.67B VND |
+| ML optimized loss | 5.16B VND |
+| Saving vs rule | 1.52B VND |
+| Saving vs rule rate | 22.73% |
+| Profit vs approve-all | 1.59B VND |
+
+## Project Structure
+
+```text
+fraud-detection-paysim/
+├── data/raw/Synthetic_Financial_datasets_log.csv
+├── models/LightGBM_model.pkl
+├── notebooks/
+│   ├── 01_eda.ipynb
+│   ├── 02_feature_eng.ipynb
+│   └── 03_modeling.ipynb
+├── src/
+│   ├── data_loader.py
+│   ├── features.py
+│   └── model_eval.py
+└── README.md
+```
+
+## Key Files
+
+- `src/features.py`: T0-safe feature whitelist and leakage guards.
+- `src/data_loader.py`: chronological split and train-only class balancing.
+- `src/model_eval.py`: cost matrix, profit curve, ROC curve, and lift curve helpers.
+- `notebooks/03_modeling.ipynb`: current end-to-end training and evaluation notebook.
+
+## Run
+
+```bash
+python -m compileall src
+python -m jupyter nbconvert --to notebook --execute notebooks/03_modeling.ipynb --inplace --ExecutePreprocessor.timeout=900
+```
+
+## Notes
+
+PaySim is synthetic data, so this project is safe for public portfolio use. The production interpretation still requires validating field availability at transaction authorization time, especially for any balance-derived feature.
