@@ -4,6 +4,41 @@ from sklearn.metrics import auc, roc_curve
 
 
 def calculate_ev(prob_fraud, amount, clv_score):
+    """
+    Calculate expected value for fraud intervention decision.
+
+    Computes whether inntervening on a transaction has positive expected value using the formula:
+    EV = P(fraud) * amount - P(not fraud) * cost_false_positive
+
+    Parameters
+    ----------
+    prob_fraud: float
+        Fraud probability from model (0 to 1).
+    amount : float
+        Transaction amount in VND.
+    clv_score: float
+        Customer lifetime value (CLV) in VND.
+        Used to calculate churn loss if customer is falsely blocked.
+
+    Returns
+    -------
+    float
+        Expected value of intervention. Posiitve = intervene,
+        Negative = allow transaction
+    
+    Examples
+    --------
+    >>> ev = calculate_ev(prob_fraud=0.8, amount=5000000, clv_score=50000000)
+    >>> ev > 0
+    True
+
+    Notes
+    -----
+    - Cost of operation: 50,000 VND per intervention
+    - Churn rate if falsely blocked: 10%
+    - Only fraud loss considered (ignores fraud catch rewards)
+    - Use in Decision 2345 fraud intervention strategy
+    """
     # Giả định các tham số chi phí 
     cost_operation = 50000 
     p_churn_if_blocked = 0.1 # 1% xác suất mất khách hàng nếu chặn nhầm
@@ -19,6 +54,45 @@ def calculate_ev(prob_fraud, amount, clv_score):
 # Quyết định: Nếu EV > 0 thì can thiệp, nếu EV <= 0 thì cho qua
 
 def get_friction_level(prob, amount, clv_score):
+    """
+    Determine friction level for transaction based on fraud risk.
+
+    Maps fraud probalitity and transaction amount to intervention level
+    using Decision 2345 strategy. Creates 5 friction levels from auto-approval
+    to acciunt freeze.
+
+    Parameters
+    ----------
+    prob : float
+        Fraud probability from model (0 to 1).
+    amount : float
+        Transaction amoint in VND.
+    clv_score: float
+        Customer lifetime value in VND (used for context).
+
+    Returns
+    -------
+    str
+        Friction level name. One of:
+        - "Cấp 0: Phê duyệt tự động" (Auto-approve)
+        - "Cấp 1: Gửi SMS/Notification" (Send SMS)
+        - "Cấp 2: Sinh trắc học FaceID" (FaceID request)
+        - "Cấp 3: Video Call/Tạm dừng 30p" (Video call + pause)
+        - "Cấp 4: Đóng băng tài khoản" (Freeze account)
+
+    Examples
+    --------
+    >>> level = get_friction_level(prob=0.9, amount=5000000, clv_score=50000000)
+    >>> level
+    'Cấp 3: Video Call/Tạm dừng 30p'
+
+    Notes
+    -----
+    - Decision 2345 threshold: 10 triệu VND
+    - Probability thresholds: 0.95, 0.8, 0.5, 0.2
+    - Friction increases with both probability and amount
+    - Used in production fraud intervention system
+    """
     # Kết hợp Xác suất và Quyết định 2345 (Ngưỡng 10 triệu)
     if prob >= 0.95:
         return "Cấp 4: Đóng băng tài khoản"
