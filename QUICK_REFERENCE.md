@@ -95,9 +95,9 @@ pytest tests/test_features.py -v  # Run specific test
 3. Save visualizations to reports/figures/
 
 # Key visualizations:
-- Confusion Matrix (confusion_matrix_lightgbm.png)
+- Profit Curve (profit_curve.png)
+- Lift Curve (lift_curve.png)
 - ROC Curve (roc_curve_lightgbm.png)
-- Precision-Recall Curve (precision_recall_curve.png)
 - Feature Importance (feature_importance.png)
 - Model Comparison (model_comparison.png)
 ```
@@ -187,6 +187,27 @@ grep -r "reports/" README.md    # Check image links
 - `DATA_DICTIONARY.md` (NEW) - Feature descriptions
 - `METHODOLOGY.md` (NEW) - ML approach explained
 - `DATA_GOVERNANCE.md` (NEW) - Data transparency
+
+---
+
+## 📈 BUSINESS METRICS CHEAT SHEET
+
+### 1. Chronological Split vs Random Split
+- **Random Split (Bad):** Allows the model to look into the future, causing Temporal Data Leakage.
+- **Chronological Split (Good):** Splits data strictly by time (`step`). Simulates real-world deployment.
+
+### 2. Decision 2345 (QĐ 2345/NHNN)
+Friction levels based on transaction amount and fraud probability:
+- **Cấp 0:** Phê duyệt tự động
+- **Cấp 1:** Gửi SMS/Notification
+- **Cấp 2:** Sinh trắc học FaceID (Bắt buộc nếu > 10 triệu)
+- **Cấp 3:** Video Call / Tạm dừng 30p
+- **Cấp 4:** Đóng băng tài khoản
+
+### 3. Profit Curve & Expected Value (EV)
+Instead of a fixed 0.5 threshold, we pick the threshold that maximizes profit.
+- **EV Formula:** `P(fraud) * amount - P(not fraud) * Cost_False_Positive`
+- **Cost False Positive (CFP):** `Operation_Cost + (Churn_Rate * CLV)`
 
 ---
 

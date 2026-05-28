@@ -78,11 +78,11 @@ Transform from **prototype** → **production-ready portfolio project** by addre
 ### **PHASE 3: Metrics Visualization & Analysis (Week 2)**
 **Goal:** Showcase model performance visually  
 **Acceptance Criteria:**
-- [ ] Confusion Matrix visualization
+- [ ] Profit Curve (threshold optimization)
 - [ ] ROC Curve + AUC score
-- [ ] Precision-Recall Curve
+- [ ] Lift Curve (Fraud concentration)
 - [ ] Feature Importance plot
-- [ ] Confusion Matrix for all models (RF, XGBoost, LightGBM)
+- [ ] Profit comparison for all models (RF, XGBoost, LightGBM)
 - [ ] Model comparison dashboard
 
 **Outputs:**
@@ -233,15 +233,15 @@ Priority: 🟠 **MEDIUM**
     - Content:
       * Load trained LightGBM model
       * Generate predictions on test set
-      * Plot confusion matrix
+      * Plot Profit curve + Find best threshold
+      * Plot Lift curve (Fraud concentration)
       * Plot ROC curve + calculate AUC
-      * Plot Precision-Recall curve
-      * Calculate F1, Precision, Recall, Specificity
+      * Summarize Decision 2345 Friction Levels (Cấp 0 - Cấp 4)
     
 11. **Task 3.2:** Create model comparison notebook
     - File: (Add to `notebooks/03_modeling.ipynb` or separate)
     - Compare: Random Forest vs XGBoost vs LightGBM
-    - Metrics table: AUC, AP, F1, Precision, Recall
+    - Metrics table: Profit vs baseline, Alert Rate, ROC-AUC, AUC, AP
     - Feature importance comparison
     
 12. **Task 3.3:** Save all visualizations
