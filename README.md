@@ -4,6 +4,36 @@ Machine learning project for real-time payment fraud detection on the PaySim syn
 
 This repository was audited for data leakage. The current modeling notebook uses a T0-safe feature whitelist, chronological train/test split, profit-curve threshold optimization, and ROC/Lift monitoring.
 
+## 🚀 Project Status
+
+**Phase:** BATCH 1 - Code Quality & Documentation (In Progress)
+
+| Item | Status | Notes |
+|------|--------|-------|
+| Code cleanup | ✅ In Progress | Docstrings added to src/ files |
+| Unit tests | ⏳ Todo | Target: 80%+ coverage |
+| Metrics visualization | ⏳ Todo | Confusion matrix, ROC curve, etc. |
+| Baseline comparison | ⏳ Todo | Rule-based vs ML model |
+| Model deployment | ⏳ Todo | Flask/FastAPI API |
+| Documentation | ⏳ Todo | Complete README, data dictionary, etc. |
+
+## 📝 Code Documentation
+
+All Python source files now include comprehensive NumPy-style docstrings:
+
+- **`src/features.py`**
+  - `build_features()` - Feature engineering pipeline (T0-safe)
+  - `split_xy()` - Train/test split utility
+  
+- **`src/data_loader.py`** (Coming)
+  - `load_paysim_data()` - Data loading with memory optimization
+  - `get_sample_data()` - EDA balanced sampling
+  - `get_sample_modeling()` - Modeling focused sampling
+  
+- **`src/model_eval.py`** (Coming)
+  - `calculate_ev()` - Expected value calculation
+  - `get_friction_level()` - Friction decision stratification
+
 ## Current Results
 
 These results come from `notebooks/03_modeling.ipynb` after removing leakage-prone raw balance columns and replacing random split with a chronological split.
