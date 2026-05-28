@@ -10,7 +10,7 @@ This repository was audited for data leakage. The current modeling notebook uses
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Code cleanup | ✅ In Progress | Docstrings added to src/ files |
+| Code cleanup | ✅ 60% | 1.1, 1.3 done; 1.2, 1.4, 1.5 remaining |
 | Unit tests | ⏳ Todo | Target: 80%+ coverage |
 | Metrics visualization | ⏳ Todo | Confusion matrix, ROC curve, etc. |
 | Baseline comparison | ⏳ Todo | Rule-based vs ML model |
@@ -21,18 +21,23 @@ This repository was audited for data leakage. The current modeling notebook uses
 
 All Python source files now include comprehensive NumPy-style docstrings:
 
-- **`src/features.py`**
+- **`src/features.py`** ✅
   - `build_features()` - Feature engineering pipeline (T0-safe)
-  - `split_xy()` - Train/test split utility
+  - `split_xy()` - Train/test split utility (⏳ in progress)
   
-- **`src/data_loader.py`** (Coming)
+- **`src/data_loader.py`** (⏳ in progress)
   - `load_paysim_data()` - Data loading with memory optimization
   - `get_sample_data()` - EDA balanced sampling
   - `get_sample_modeling()` - Modeling focused sampling
   
-- **`src/model_eval.py`** (Coming)
+- **`src/model_eval.py`** ✅ (7 functions)
   - `calculate_ev()` - Expected value calculation
   - `get_friction_level()` - Friction decision stratification
+  - `decision_loss()` - Cost-only evaluation matrix
+  - `build_profit_curve()` - Profit curve by threshold
+  - `find_best_threshold()` - Select optimal threshold
+  - `build_roc_curve()` - ROC curve for monitoring
+  - `build_lift_curve()` - Cumulative lift by decile
 
 ## Current Results
 

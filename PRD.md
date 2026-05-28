@@ -159,9 +159,16 @@ Priority: 🔴 **HIGH**
    - File: `src/features.py`
    - NumPy-style docstring needed
    
-3. **Task 1.3:** ⏳ TODO - Add NumPy-style docstrings to `model_eval.py`
+3. **Task 1.3:** ✅ DONE - Add NumPy-style docstrings to `model_eval.py` (7 functions)
    - File: `src/model_eval.py`
-   - Functions: `calculate_ev()`, `get_friction_level()`
+   - Functions completed:
+     * `calculate_ev()` - Expected value calculation
+     * `get_friction_level()` - Friction decision stratification
+     * `decision_loss()` - Cost-only evaluation matrix
+     * `build_profit_curve()` - Profit curve by threshold
+     * `find_best_threshold()` - Select optimal threshold
+     * `build_roc_curve()` - ROC curve for monitoring
+     * `build_lift_curve()` - Cumulative lift by decile
    
 4. **Task 1.4:** ⏳ TODO - Add NumPy-style docstrings to `data_loader.py`
    - File: `src/data_loader.py`
@@ -174,7 +181,8 @@ Priority: 🔴 **HIGH**
 **Definition of Done:**
 - [x] `build_features()` docstring updated (NumPy style)
 - [ ] `split_xy()` docstring added
-- [ ] All 3 files in `src/` have complete docstrings
+- [x] `model_eval.py` (7 functions) docstrings added
+- [ ] `data_loader.py` (3 functions) docstrings added
 - [ ] No PEP 8 violations
 - [ ] All typos fixed
 
