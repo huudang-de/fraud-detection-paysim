@@ -67,29 +67,85 @@ def get_sample_data(df):
 
 def get_sample_modeling(df):
     '''
-    Hàm kết hợp: Lọc rủi ro tập trung + Whitelist Merchant + Lấy mẫu cân bằng.
-    Chiến lược: 
-    - Chỉ giữ lại TRANSFER và CASH_OUT (Phân khúc rủi ro cao).
-    - Whitelist toàn bộ Merchant (Vì 100% gian lận chỉ nhắm vào Customer).
+    Backward-compatible wrapper for modeling scope selection.
+
+    This function no longer samples by isFraud. Target-aware sampling before
+    train/test split inflates offline metrics and can hide data leakage.
     '''
-    # Lọc rủi ro tập trung
-    focused_df = df[df['type'].isin(['TRANSFER', 'CASH_OUT']) & 
-                    (df['nameDest'].str.startswith('C'))
-                    ]
+    focused_df = filter_modeling_scope(df)
+    print(f"---Đã tạo tập dữ liệu Modeling scope: {len(focused_df)} dòng ---")
+    return focused_df
+
+
+def filter_modeling_scope(df, high_risk_only=True, customer_dest_only=True, time_col='step'):
+    '''
+    Keep only rows that are in the intended real-time scoring scope.
+
+    Filters must use fields available at transaction time. Do not use isFraud
+    or post-transaction balances here.
+    '''
+    mask = pd.Series(True, index=df.index)
+
+    if high_risk_only:
+        mask &= df['type'].isin(['TRANSFER', 'CASH_OUT'])
+
+    if customer_dest_only:
+        mask &= df['nameDest'].str.startswith('C')
+
+    scoped_df = df.loc[mask].copy()
+
+    if time_col in scoped_df.columns:
+        scoped_df = scoped_df.sort_values(time_col)
+
+    return scoped_df
+
+
+def split_by_time(df, test_size=0.2, time_col='step'):
+    '''
+    Split train/test chronologically to avoid temporal leakage.
+    '''
+    if not 0 < test_size < 1:
+        raise ValueError("test_size must be between 0 and 1")
+    if time_col not in df.columns:
+        raise ValueError(f"Missing time column: {time_col}")
+
+    ordered_df = df.sort_values(time_col).copy()
+    split_idx = int(len(ordered_df) * (1 - test_size))
+
+    if split_idx <= 0 or split_idx >= len(ordered_df):
+        raise ValueError("Not enough rows to create a non-empty train/test split")
+
+    cutoff_value = ordered_df[time_col].iloc[split_idx]
+    train_df = ordered_df[ordered_df[time_col] < cutoff_value].copy()
+    test_df = ordered_df[ordered_df[time_col] >= cutoff_value].copy()
+
+    if train_df.empty or test_df.empty:
+        raise ValueError("Time split produced an empty train or test set")
+
+    return train_df, test_df
+
+
+def balance_training_data(df, target_col='isFraud', negative_multiplier=3, random_state=42):
+    '''
+    Downsample the majority class after splitting. Use only for training data.
+    '''
+    if target_col not in df.columns:
+        raise ValueError(f"Missing target column: {target_col}")
+    if negative_multiplier < 1:
+        raise ValueError("negative_multiplier must be >= 1")
     
-    # Phân tách lớp
-    fraud_df = focused_df[focused_df['isFraud'] == 1]
-    non_fraud_df = focused_df[focused_df['isFraud'] == 0]
+    fraud_df = df[df[target_col] == 1]
+    non_fraud_df = df[df[target_col] == 0]
 
-    # Lấy mẫu cân bằng (tỷ lệ 25_8213/75_24639)
-    n_sample = min(len(non_fraud_df), 24639)
-    non_fraud_sample = non_fraud_df.sample(n=n_sample, random_state=42)
+    if fraud_df.empty or non_fraud_df.empty:
+        return df.copy()
 
-    # Gộp và xáo trộn
-    balanced_df = pd.concat([fraud_df, non_fraud_sample])
-    balanced_df = balanced_df.sample(frac=1, random_state=42).reset_index(drop=True)
+    n_sample = min(len(non_fraud_df), len(fraud_df) * negative_multiplier)
+    non_fraud_sample = non_fraud_df.sample(n=n_sample, random_state=random_state)
 
-    print(f"---Đã tạo tập dữ liệu mẫu Modeling: {len(balanced_df)} dòng ---")
+    balanced_df = pd.concat([fraud_df, non_fraud_sample], axis=0)
+    balanced_df = balanced_df.sample(frac=1, random_state=random_state)
+
     return balanced_df
 
 if __name__ == "__main__":
@@ -107,10 +163,10 @@ if __name__ == "__main__":
         print("\n Tỷ lệ các lớp trong tập mẫu:") # kiểm tra tỷ lệ gian lận
         print(balanced_data['isFraud'].value_counts(normalize=True))
 
-        # Lấy mẫu cho Modeling
+        # Lọc phạm vi modeling T0-safe
         balanced_data = get_sample_modeling(data)
 
-        print("\n5 dòng đầu của dữ liệu đã lọc rủi ro và cân bằng:")
+        print("\n5 dòng đầu của dữ liệu đã lọc phạm vi modeling:")
         print(balanced_data.head())
 
         print("\nTỷ lệ các lớp trong tập mẫu:")
