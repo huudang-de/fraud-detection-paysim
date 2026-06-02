@@ -96,10 +96,10 @@ def split_xy(df):
     Parameters
     ----------
     df : pandas.DataFrame
-        The raw of preproceseed dataset. Required conditions for the input:
+        The raw or preprocessed dataset. Required conditions for the input:
         - Must contain the dependent variable column (defined in TARGET_COLUMN).
         - Must contain all core independent variables (defined in MODEL_FEATURE_COLUMNS).
-        - Must strictly NOT contain ant information-leaking columns (defined in LEAKAGE_FEATURE_COLUMNS).
+        - Must strictly NOT contain any information-leaking columns (defined in LEAKAGE_PRONE_COLUMNS).
 
     Returns
     -------

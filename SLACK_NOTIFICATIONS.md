@@ -14,22 +14,23 @@
 ```
 🚀 BATCH 1: Code Cleanup & Fixes - Est. 2-3 hours
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+**Progress:** 2/5 complete (40%)
 
-⬜ Task 1.1: Verify all notebooks/imports use build_features()
+✅ Task 1.1: Verify all notebooks/imports use build_features()
    File: src/features.py
-   Impact: Prevents import errors & improves code clarity
-
-⬜ Task 1.2: Add NumPy docstrings to features.py
-   File: src/features.py
-   Requirements: Description, Parameters, Returns, Example for ALL functions
-
+   Status: DONE
+   
+✅ Task 1.2: Add NumPy docstrings to features.py
+   Files: src/features.py (build_features + split_xy)
+   Status: DONE
+   
 ⬜ Task 1.3: Add NumPy docstrings to model_eval.py  
    File: src/model_eval.py
-   Requirements: Complete docstring coverage
+   Requirements: Complete docstring coverage for 7 functions
 
 ⬜ Task 1.4: Add NumPy docstrings to data_loader.py
    File: src/data_loader.py
-   Requirements: Complete docstring coverage
+   Requirements: Complete docstring coverage for 3 functions
 
 ⬜ Task 1.5: PEP 8 Compliance Check
    Tools: flake8 or pylint
@@ -38,14 +39,16 @@
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📝 Deliverables:
-  • src/features.py (cleaned + docstrings)
-  • src/model_eval.py (cleaned + docstrings)
-  • src/data_loader.py (cleaned + docstrings)
-  • Flake8 validation report (0 errors)
+  • src/features.py ✅ (cleaned + docstrings + typos fixed)
+  • src/model_eval.py (pending docstrings)
+  • src/data_loader.py (pending docstrings)
+  • Flake8 validation report (pending)
 
 ✅ Definition of Done:
-  ☐ No typos in function/variable names
-  ☐ All functions have complete docstrings
+  ☑ Typos fixed in features.py
+  ☑ All features.py functions have complete docstrings
+  ☐ All model_eval.py functions have docstrings  
+  ☐ All data_loader.py functions have docstrings
   ☐ PEP 8 compliance: 0 violations
   ☐ Code passes flake8 validation
   ☐ Ready for unit testing (BATCH 2)

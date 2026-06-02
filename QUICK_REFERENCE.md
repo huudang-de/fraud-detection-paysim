@@ -44,12 +44,12 @@ pip install flake8  # if needed
 📍 **Definition of Done:**
 - [x] Typo fixed: `build_fratures()` → `build_features()`
 - [x] `build_features()` docstring added (NumPy style)
-- [ ] `split_xy()` docstring added
+- [x] `split_xy()` docstring added
 - [ ] `src/data_loader.py` (3 functions) docstrings added
   - `load_paysim_data()`
   - `get_sample_data()`
   - `get_sample_modeling()`
-- [x] `src/model_eval.py` (7 functions) docstrings updated
+- [ ] `src/model_eval.py` (7 functions) docstrings added
   - `calculate_ev()`
   - `get_friction_level()`
   - `decision_loss()`
@@ -58,7 +58,7 @@ pip install flake8  # if needed
   - `build_roc_curve()`
   - `build_lift_curve()`
 - [ ] Flake8: 0 violations
-- [ ] Code review: ✅ PASS
+- [ ] Code review: PENDING
 
 ---
 

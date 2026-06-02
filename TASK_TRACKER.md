@@ -37,18 +37,20 @@
 | # | Task | Status | Owner | Hours | Notes |
 |---|------|--------|-------|-------|-------|
 | 1.1 | Verify all imports use `build_features()` | ✅ | - | 0.5 | All notebooks refactored |
-| 1.2 | Add NumPy docstrings to features.py | ✅ | - | 0.5 | split_xy complete |
-| 1.3 | Add NumPy docstrings to model_eval.py | ⚪ | - | 0.5 | All functions |
-| 1.4 | Add NumPy docstrings to data_loader.py | ⚪ | - | 0.5 | All functions |
+| 1.2 | Add NumPy docstrings to features.py | ✅ | - | 0.5 | build_features + split_xy complete |
+| 1.3 | Add NumPy docstrings to model_eval.py | ⚪ | - | 0.5 | All 7 functions |
+| 1.4 | Add NumPy docstrings to data_loader.py | ⚪ | - | 0.5 | All 3 functions |
 | 1.5 | PEP 8 compliance check (flake8) | ⚪ | - | 0.5 | Fix all violations |
 
 **Subtotal:** 2.5 hours
 
 **Checklist:**
-- [ ] All typos fixed
-- [ ] All functions have docstrings
+- [x] Typos fixed in features.py
+- [x] features.py functions have docstrings (NumPy style)
+- [ ] model_eval.py docstrings pending
+- [ ] data_loader.py docstrings pending
 - [ ] Flake8 passes (0 violations)
-- [ ] Code review passed
+- [ ] Code review pending
 - [ ] Ready for BATCH 2
 
 ---

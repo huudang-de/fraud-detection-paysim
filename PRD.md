@@ -42,18 +42,21 @@ Transform from **prototype** → **production-ready portfolio project** by addre
 
 ### **PHASE 1: Code Quality & Documentation (Week 1)**
 **Goal:** Clean up code, fix typos, improve readability  
+**Status:** 🔄 IN PROGRESS (Task 1.1, 1.2 done ✅ | Task 1.3 in progress 🔄 | Task 1.4-1.5 pending)
+
 **Acceptance Criteria:**
+- [x] Verify all notebooks/imports use `build_features()`
+- [x] Add docstrings to `src/features.py` (2 functions complete)
+- [ ] Add docstrings to `src/model_eval.py` (7 functions - in progress)
+- [ ] Add docstrings to `src/data_loader.py` (3 functions - pending)
 - [ ] All Python files follow PEP 8
-- [ ] Verify all notebooks/imports use `build_features()`
-- [ ] Add docstrings to all functions (NumPy format)
-- [ ] Add inline comments for complex logic
 - [ ] No typos in variable/function names
 
 **Outputs:**
-- `src/features.py` (cleaned)
-- `src/model_eval.py` (cleaned)
-- `src/data_loader.py` (cleaned)
-- Code review checklist ✅
+- ✅ `src/features.py` (cleaned + docstrings)
+- 🔄 `src/model_eval.py` (docstrings in progress)
+- ⏳ `src/data_loader.py` (pending)
+- ⏳ Code review checklist
 
 ---
 
@@ -151,17 +154,20 @@ Transform from **prototype** → **production-ready portfolio project** by addre
 Priority: 🔴 **HIGH**
 **Status: IN PROGRESS** ✅
 
-1. **Task 1.1:** ✅ DONE - Fix `build_fratures()` typo → `build_features()` 
+1. **Task 1.1:** ✅ DONE - Verify all notebooks/imports use `build_features()` 
    - File: `src/features.py`
-   - Added proper NumPy docstring with Parameters, Returns, Examples
+   - All notebooks refactored
    
-2. **Task 1.2:** 🔄 IN PROGRESS - Add docstring to `split_xy()`
+2. **Task 1.2:** ✅ DONE - Add NumPy-style docstrings to `features.py` (2 functions)
    - File: `src/features.py`
-   - NumPy-style docstring needed
-   
-3. **Task 1.3:** ✅ DONE - Add NumPy-style docstrings to `model_eval.py` (7 functions)
-   - File: `src/model_eval.py`
    - Functions completed:
+     * `build_features()` - Feature engineering with domain logic
+     * `split_xy()` - Safe feature/target extraction with leakage guards
+   - Typos fixed: "preproceseed" → "preprocessed", etc.
+   
+3. **Task 1.3:** 🔄 IN PROGRESS - Add NumPy-style docstrings to `model_eval.py` (7 functions)
+   - File: `src/model_eval.py`
+   - Functions to complete:
      * `calculate_ev()` - Expected value calculation
      * `get_friction_level()` - Friction decision stratification
      * `decision_loss()` - Cost-only evaluation matrix
@@ -170,7 +176,7 @@ Priority: 🔴 **HIGH**
      * `build_roc_curve()` - ROC curve for monitoring
      * `build_lift_curve()` - Cumulative lift by decile
    
-4. **Task 1.4:** ⏳ TODO - Add NumPy-style docstrings to `data_loader.py`
+4. **Task 1.4:** ⏳ TODO - Add NumPy-style docstrings to `data_loader.py` (3 functions)
    - File: `src/data_loader.py`
    - Functions: `load_paysim_data()`, `get_sample_data()`, `get_sample_modeling()`
    
@@ -179,10 +185,10 @@ Priority: 🔴 **HIGH**
    - Fix all formatting issues
    
 **Definition of Done:**
-- [x] `build_features()` docstring updated (NumPy style)
-- [ ] `split_xy()` docstring added
-- [x] `model_eval.py` (7 functions) docstrings added
-- [ ] `data_loader.py` (3 functions) docstrings added
+- [x] `build_features()` docstring complete (NumPy style)
+- [x] `split_xy()` docstring complete (NumPy style) 
+- [ ] `model_eval.py` (7 functions) docstrings in progress
+- [ ] `data_loader.py` (3 functions) docstrings pending
 - [ ] No PEP 8 violations
 - [ ] All typos fixed
 
