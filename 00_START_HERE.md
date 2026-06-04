@@ -1,27 +1,26 @@
 # 📦 PROJECT STATUS & DELIVERABLES
 
 **Project:** Fraud Detection System - PaySim Enhancement  
-**Status:** 🟠 BATCH 1 IN PROGRESS (40% complete - 2/5 tasks done)  
+**Status:** 🟠 BATCH 1 IN PROGRESS (60% complete - 3/5 tasks done)  
 **Last Updated:** June 2, 2026
 
 ---
 
 ## � BATCH 1: CODE CLEANUP (In Progress)
 
-**Progress:** 🟠 2/5 tasks complete (40%)
+**Progress:** 🟠 3/5 tasks complete (60%)
 
 | Task | Status | Deliverable |
 |------|--------|-----------|
 | 1.1 - Verify imports | ✅ DONE | All notebooks refactored to use `build_features()` |
 | 1.2 - Add docstrings to features.py | ✅ DONE | `build_features()` + `split_xy()` documented + typos fixed |
-| 1.3 - Add docstrings to model_eval.py | ⏳ PENDING | 7 functions need NumPy-style docstrings |
+| 1.3 - Add docstrings to model_eval.py | ✅ DONE | 7 functions documented with NumPy-style |
 | 1.4 - Add docstrings to data_loader.py | ⏳ PENDING | 3 functions need NumPy-style docstrings |
 | 1.5 - PEP 8 Compliance (flake8) | ⏳ PENDING | Run flake8, fix all violations |
 
 **Next Steps:**
-1. Task 1.3: Add docstrings to `src/model_eval.py` (est. 0.5 hrs)
-2. Task 1.4: Add docstrings to `src/data_loader.py` (est. 0.5 hrs)  
-3. Task 1.5: Run flake8 & fix violations (est. 0.5 hrs)
+1. Task 1.4: Add docstrings to `src/data_loader.py` (est. 0.5 hrs)  
+2. Task 1.5: Run flake8 & fix violations (est. 0.5 hrs)
 
 ---
 
