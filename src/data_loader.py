@@ -3,6 +3,39 @@ import numpy as np
 import os
 
 def load_paysim_data(file_path):
+    """
+    Load and memory-optimize the PaySim dataset from a CSV file.
+
+    This function reads data from a specified CSV file path and automatically reduces 
+    its memory footprint by downcasting data types. Integer columns are cast to the 
+    smallest possible integer types (int8, int16, int32), floating-point numbers are 
+    cast to `float32`, and the string column named 'type' is cast to a `category` type.
+
+    Parameters
+    ----------
+    file_path : str
+        The absolute or relative path to the CSV file to be loaded.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A DataFrame containing the data with optimized memory types.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the file at the specified `file_path` does not exist.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> path = 'data/raw/Synthetic_Financial_datasets_log.csv'
+    >>> df = load_paysim_data(path)
+    --- Đang tải dữ liệu từ: data/raw/Synthetic_Financial_datasets_log.csv ---
+    Bộ nhớ tiêu thụ ban đầu: 2834.50 MB
+    Bộ nhớ tiêu thụ sau tối ưu: 600.20 MB
+    Tiết kiệm được: 78.8%
+    """
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Không tim thấy file tại: {file_path}")
 
@@ -45,10 +78,32 @@ def load_paysim_data(file_path):
 
 
 def get_sample_data(df):
-    '''
-    Hàm lấy mẫu từ TOÀN BỘ dữ liệu (Dùng cho EDA tổng quát)
-    Tỷ lệ: Giữ nguyên toàn bộ Fraud và lấy mẫu Non-fraud tương ứng.
-    '''
+    """
+    Sample the dataset for general Exploratory Data Analysis (EDA).
+
+    This function addresses the severe class imbalance of the PaySim dataset by keeping 
+    all fraudulent transactions (isFraud=1) and randomly downsampling the non-fraudulent
+    transactions (isFraud=0) to a maxium of 24,639 records. The resulting subsets are 
+    concatenated and shuffled to ceate a smaller, more balanced dataset suitable for 
+    visualization and preliminary analysis.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The original PaySim DataFrame (must contain the 'isFraud' column).
+
+    Returns
+    -------
+    pandas.DataFrame
+        A sampled, more balanced, and randomly shuffled DataFrame.
+    
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> # Assuming `data` is the loaded original massive DataFrame
+    >>> sampled_df = get_sample_data(data)
+    --- Đã tạo tập dữ liệu mẫu EDA: ... dòng ---
+    """
     fraud_df = df[df['isFraud'] == 1] # Lấy toàn bộ dòng gian lận
     non_fraud_df = df[df['isFraud'] ==0] # Lấy toàn bộ dòng bình thường
 
@@ -66,24 +121,72 @@ def get_sample_data(df):
     return balanced_df
 
 def get_sample_modeling(df):
-    '''
-    Backward-compatible wrapper for modeling scope selection.
+    """
+    Backward-compatible wrapper for selecting the modeling scope dataset.
 
-    This function no longer samples by isFraud. Target-aware sampling before
-    train/test split inflates offline metrics and can hide data leakage.
-    '''
+    This function delegates to `filter_codeling_scope` to ratain ony the transactions
+    that fall within the intended real-time scoring scope (e.g., TRANSFER, CASH_OUT).
+    Importantly, it no longer performs target-aware sampling (by `isFraud`) prior to 
+    the train/test split. Target-aware sampling at thí stage inflates offline metrics
+    and can obscure data leakage.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The original Paysim DataFrame.
+    
+    Retruns
+    -------
+    pandas.DataFrame
+        A filtered DataFrame containing only the transactions relevant for modeling.
+    
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> # Assuming `data` is the original DataFrame
+    >>> modeling_df = get_sample_modeling(data)
+    --- Đã tạo tập dữ liệu Modeling scope: ... dòng ---
+    """
     focused_df = filter_modeling_scope(df)
     print(f"---Đã tạo tập dữ liệu Modeling scope: {len(focused_df)} dòng ---")
     return focused_df
 
 
 def filter_modeling_scope(df, high_risk_only=True, customer_dest_only=True, time_col='step'):
-    '''
-    Keep only rows that are in the intended real-time scoring scope.
+    """
+    Filter data to keep only rows thả are within the internded real-time scoring scope.
 
-    Filters must use fields available at transaction time. Do not use isFraud
-    or post-transaction balances here.
-    '''
+    This function simulates a real-word deployment scenatio by removing transactions
+    that carry on fraud risk of fall outside the business scope. Filters must exclusively
+    use fields available at the exact moment of the transaction (do not use the `isFraud`
+    target variable or post-transaction balances). The output data is sorted chronologically.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The DataFrame containing the dataset to be filtered.
+    high_risk_only : bool, optional
+        If True, retains only transaction types known to have fraud risk (e.g.,
+        'TRANSFER' and 'CASH_OUT'). Default is True.
+    customer_dest_only : bool, optional
+        If True, retains only transactions directed towards customer accounts
+        (names strating with 'C'). Default is True.
+    time_col : str, optional
+        The name of the time column used to sort the data chronologically. Default is 'step'
+    
+    Returns
+    -------
+    pandas.DataFrame
+        A filtered DataFrame, sorted chronologically by the time column.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> # Assuming `df` contains various transaction types
+    >>> scoped_df = filter_modeling_scope(df)
+    >>> print(croped_df['type'].unique())
+    ['TRANSFER', 'CASH_OUT']
+    """
     mask = pd.Series(True, index=df.index)
 
     if high_risk_only:
@@ -101,9 +204,43 @@ def filter_modeling_scope(df, high_risk_only=True, customer_dest_only=True, time
 
 
 def split_by_time(df, test_size=0.2, time_col='step'):
-    '''
-    Split train/test chronologically to avoid temporal leakage.
-    '''
+    """
+    Split the dataset into train and test sets chronologically to prevent temporal leakage.
+
+    This function sorts the data sequentially using the specified time column,
+    determines a cutoff point based on the `test_size` ratio, and splits the data.
+    Transactions occurring before the cutoff form the training set, while transactions
+    occurring at or after the cutoff form the test set. This approach is critical for
+    time-series and financial data to ensure the model does not "peek" into the future.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The DataFrame to be split.
+    test_size : float, optional
+        The proportion of the dataset (between 0 and 1) to include in the test split.
+        This will be the most recent data chronologically. Default is 0.2 (20%).
+    time_col : str, optional
+        The name of the column representing time for sorting. Default is 'step'.
+    
+    Returns
+    -------
+    tuple of pandas.DataFrame
+        A tuple containing two DataFrames: (train_df, test_df).
+    
+    Raises
+    ------
+    ValueError
+        If `test_size` is not between 0 and 1, if `time_col` is missing, or if
+        the resulting train or test split is empty.
+        
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> # Assuming `df` is already scoped data
+    >>> train_df, test_df = split_by_time(df, test_size=0.2)
+    >>> print(f"Train: {len(train_df)} rows, Test: {len(test_df)} rows")
+    """
     if not 0 < test_size < 1:
         raise ValueError("test_size must be between 0 and 1")
     if time_col not in df.columns:
@@ -126,9 +263,46 @@ def split_by_time(df, test_size=0.2, time_col='step'):
 
 
 def balance_training_data(df, target_col='isFraud', negative_multiplier=3, random_state=42):
-    '''
-    Downsample the majority class after splitting. Use only for training data.
-    '''
+    """
+    Downsample the majority class to balance the dataset. USE ONLY FOR TRAINING DATA.
+
+    This function addresses class imbalance by retaining all minority class instances
+    (fraud) and randomly sampling the majority class (non-fraud) based on a specified
+    multiplier. Warning: This must only be applied to the Training set *after* splitting
+    (e.g., using split_by_time). Do not apply this to the Test set, as testing must 
+    reflect the natural distribution of the real world.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The Training DataFrame to be balanced.
+    target_col : str, optional
+        The name of the target/label column. Defrault id 'isFraud'.
+    negative_multiplier : int or float, optional
+        The ratio of negative (non-fraud) instances to positive (fraud) instances
+        to retain. For example, a multiplier of 3 means there will be 3 non-fraud rows
+        for every 1 fraud row. Default is 3.
+    random_state : int, optional
+        Seed for reproducible random sampling. Default is 42.
+    
+    Returns
+    -------
+    pandas.DataFrame
+        A class-balanced and randomly shuffled DataFrame.
+    
+    Raises
+    ------
+    ValueError
+        If the `target_col` is not found in the DataFrame or if `negative_multiplier`
+        is strictly less than 1.
+    
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> # train_df is obtained from split_by_time
+    >>> balanced_train_df = balance_training_data(train_df, negative_multiplier=3)
+    >>> print(balanced_train_df['isFraud'].value_counts())
+    """
     if target_col not in df.columns:
         raise ValueError(f"Missing target column: {target_col}")
     if negative_multiplier < 1:
