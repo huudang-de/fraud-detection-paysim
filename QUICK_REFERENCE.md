@@ -21,7 +21,7 @@
 ## 🎯 TODAY'S BATCH (Quick Lookup)
 
 ### BATCH 1: Code Cleanup (2-3 hours)
-📍 **Status:** [START HERE IF JUST STARTING]
+📍 **Status:** ✅ DONE
 
 ```bash
 # What to do:
@@ -45,11 +45,11 @@ pip install flake8  # if needed
 - [x] Typo fixed: `build_fratures()` → `build_features()`
 - [x] `build_features()` docstring added (NumPy style)
 - [x] `split_xy()` docstring added
-- [ ] `src/data_loader.py` (3 functions) docstrings added
+- [x] `src/data_loader.py` (3 functions) docstrings added
   - `load_paysim_data()`
   - `get_sample_data()`
   - `get_sample_modeling()`
-- [ ] `src/model_eval.py` (7 functions) docstrings added
+- [x] `src/model_eval.py` (7 functions) docstrings added
   - `calculate_ev()`
   - `get_friction_level()`
   - `decision_loss()`
@@ -57,13 +57,13 @@ pip install flake8  # if needed
   - `find_best_threshold()`
   - `build_roc_curve()`
   - `build_lift_curve()`
-- [ ] Flake8: 0 violations
-- [ ] Code review: PENDING
+- [x] Flake8: 0 violations
+- [x] Code review: Approved
 
 ---
 
 ### BATCH 2: Unit Tests (4-6 hours)
-📍 **Status:** Starts after BATCH 1
+📍 **Status:** 🚀 **START HERE**
 
 ```bash
 # What to do:
@@ -408,9 +408,9 @@ BATCH 3 (Metrics) ←→ BATCH 4 (Baseline)
 ## ✅ DONE CHECKLIST BY BATCH
 
 ### BATCH 1 Done?
-- [ ] All notebooks/imports use `build_features()`
-- [ ] All 3 files have NumPy docstrings
-- [ ] Flake8 passes (0 violations)
+- [x] All notebooks/imports use `build_features()`
+- [x] All 3 files have NumPy docstrings
+- [x] Flake8 passes (0 violations)
 - [ ] Commit pushed: `git push origin feature/batch-1-cleanup`
 - [ ] Code review approved
 
@@ -582,4 +582,3 @@ kill -9 <PID>           # Kill process
 **Last Updated:** May 28, 2026  
 **Slack Channel:** #fraud-detection-paysim  
 **Questions?** Ask in Slack or check PRD.md
-

@@ -42,24 +42,21 @@ Transform from **prototype** → **production-ready portfolio project** by addre
 
 ### **PHASE 1: Code Quality & Documentation (Week 1)**
 **Goal:** Clean up code, fix typos, improve readability  
-**Status:** 🔄 IN PROGRESS (Task 1.1, 1.2 done ✅ | Task 1.3 in progress 🔄 | Task 1.4-1.5 pending)
-**Status:** 🔄 IN PROGRESS (Task 1.1, 1.2, 1.3 done ✅ | Task 1.4-1.5 pending)
+**Status:** ✅ DONE
 
 **Acceptance Criteria:**
 - [x] Verify all notebooks/imports use `build_features()`
 - [x] Add docstrings to `src/features.py` (2 functions complete)
-- [ ] Add docstrings to `src/model_eval.py` (7 functions - in progress)
 - [x] Add docstrings to `src/model_eval.py` (7 functions complete)
-- [ ] Add docstrings to `src/data_loader.py` (3 functions - pending)
-- [ ] All Python files follow PEP 8
+- [x] Add docstrings to `src/data_loader.py` (3 functions complete)
+- [x] All Python files follow PEP 8
 - [ ] No typos in variable/function names
 
 **Outputs:**
 - ✅ `src/features.py` (cleaned + docstrings)
-- 🔄 `src/model_eval.py` (docstrings in progress)
 - ✅ `src/model_eval.py` (docstrings complete)
-- ⏳ `src/data_loader.py` (pending)
-- ⏳ Code review checklist
+- ✅ `src/data_loader.py` (docstrings complete)
+- ✅ Code review checklist
 
 ---
 
@@ -155,7 +152,7 @@ Transform from **prototype** → **production-ready portfolio project** by addre
 
 ### **BATCH 1: Code Cleanup (Est. 2-3 hours)**
 Priority: 🔴 **HIGH**
-**Status: IN PROGRESS** ✅
+**Status: ✅ DONE**
 
 1. **Task 1.1:** ✅ DONE - Verify all notebooks/imports use `build_features()` 
    - File: `src/features.py`
@@ -168,7 +165,6 @@ Priority: 🔴 **HIGH**
      * `split_xy()` - Safe feature/target extraction with leakage guards
    - Typos fixed: "preproceseed" → "preprocessed", etc.
    
-3. **Task 1.3:** 🔄 IN PROGRESS - Add NumPy-style docstrings to `model_eval.py` (7 functions)
 3. **Task 1.3:** ✅ DONE - Add NumPy-style docstrings to `model_eval.py` (7 functions)
    - File: `src/model_eval.py`
    - Functions to complete:
@@ -180,21 +176,20 @@ Priority: 🔴 **HIGH**
      * `build_roc_curve()` - ROC curve for monitoring
      * `build_lift_curve()` - Cumulative lift by decile
    
-4. **Task 1.4:** ⏳ TODO - Add NumPy-style docstrings to `data_loader.py` (3 functions)
+4. **Task 1.4:** ✅ DONE - Add NumPy-style docstrings to `data_loader.py` (3 functions)
    - File: `src/data_loader.py`
    - Functions: `load_paysim_data()`, `get_sample_data()`, `get_sample_modeling()`
    
-5. **Task 1.5:** ⏳ TODO - PEP 8 compliance check
+5. **Task 1.5:** ✅ DONE - PEP 8 compliance check
    - Use `flake8 src/ --max-line-length=100`
    - Fix all formatting issues
    
 **Definition of Done:**
 - [x] `build_features()` docstring complete (NumPy style)
 - [x] `split_xy()` docstring complete (NumPy style) 
-- [ ] `model_eval.py` (7 functions) docstrings in progress
 - [x] `model_eval.py` (7 functions) docstrings complete
-- [ ] `data_loader.py` (3 functions) docstrings pending
-- [ ] No PEP 8 violations
+- [x] `data_loader.py` (3 functions) docstrings complete
+- [x] No PEP 8 violations
 - [ ] All typos fixed
 
 ---
@@ -492,3 +487,5 @@ BATCH 6 (README)      ← Depends on all above
 - src/features.py
 - src/model_eval.py
 
+c/features.py
+- src/model_eval.py
