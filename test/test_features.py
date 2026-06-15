@@ -135,7 +135,9 @@ def test_build_features_empty_data(empty_data):
     # THEN:
     assert isinstance(features_df, pd.DataFrame)
     assert features_df.empty
-    assert 'hour' in features_df.columns
+    # Ensure the empty DataFrame has the correct feature columns structure
+    expected_cols = set(MODEL_FEATURE_COLUMNS + ['isFraud'])
+    assert set(features_df.columns) == expected_cols
 
 
 def test_build_features_with_nulls(data_with_nulls):
