@@ -1,0 +1,36 @@
+# (VI) Tên của workflow, sẽ hiển thị trong tab "Actions" trên GitHub
+# (EN) The name of the workflow, which will be displayed in the "Actions" tab on GitHub
+name: Python CI - Run Tests
+
+# (VI) Cấu hình khi nào workflow này sẽ chạy
+# (EN) Configure when this workflow will run
+on:
+  # (VI) Chạy khi có push lên nhánh `main`
+  # (EN) Run on pushes to the `main` branch
+  push:
+    branches: [ main ]
+  # (VI) Chạy khi có Pull Request nhắm vào nhánh `main`
+  # (EN) Run on Pull Requests targeting the `main` branch
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # (VI) Chạy trên một máy ảo Ubuntu mới nhất / (EN) Run on the latest Ubuntu virtual machine
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v4 # (VI) Tải code từ repo về máy ảo / (EN) Check out the repository code to the VM
+
+    - name: Set up Python
+      uses: actions/setup-python@v5 # (VI) Cài đặt môi trường Python / (EN) Set up the Python environment
+      with:
+        python-version: '3.10' # (VI) Sử dụng Python phiên bản 3.10 / (EN) Use Python version 3.10
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt # (VI) Cài đặt các thư viện từ file requirements.txt / (EN) Install libraries from requirements.txt
+
+    - name: Run tests with coverage
+      run: |
+        pytest tests/ --cov=src --cov-report=term-missing # (VI) Chạy test và in báo cáo coverage / (EN) Run tests and print coverage report
