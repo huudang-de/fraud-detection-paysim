@@ -196,8 +196,9 @@ Priority: 🔴 **HIGH**
 
 ### **BATCH 2: Unit Tests (Est. 4-6 hours)**
 Priority: 🔴 **HIGH**
+**Status: ✅ DONE**
 
-6. **Task 2.1:** Write unit tests for `features.py`
+6. **Task 2.1:** ✅ DONE - Write unit tests for `features.py`
    - File: `tests/test_features.py`
    - Coverage: ≥80%
    - Test cases:
@@ -206,7 +207,7 @@ Priority: 🔴 **HIGH**
      * `build_features()` with empty dataframe
      * `split_xy()` correct X/y separation
    
-7. **Task 2.2:** Write unit tests for `model_eval.py`
+7. **Task 2.2:** ✅ DONE - Write unit tests for `model_eval.py`
    - File: `tests/test_model_eval.py`
    - Coverage: ≥70%
    - Test cases:
@@ -214,20 +215,20 @@ Priority: 🔴 **HIGH**
      * `get_friction_level()` all thresholds
      * Edge cases (prob=0, prob=1, etc.)
    
-8. **Task 2.3:** Write integration tests
+8. **Task 2.3:** ✅ DONE - Write integration tests
    - File: `tests/test_integration.py`
    - Test: Load data → Build features → Train model → Evaluate
    
-9. **Task 2.4:** Set up CI/CD pipeline
+9. **Task 2.4:** ✅ DONE - Set up CI/CD pipeline
    - File: `.github/workflows/tests.yml`
    - Run tests on: push to main, pull requests
    - Generate coverage report
    
 **Definition of Done:**
-- All tests passing locally
-- Coverage ≥80% for `features.py`, ≥70% for `model_eval.py`
-- CI pipeline configured & working
-- Coverage badge in README
+- [x] All tests passing locally
+- [x] Coverage ≥80% for `features.py`, ≥70% for `model_eval.py`
+- [x] CI pipeline configured & working
+- [x] Coverage badge in README
 
 ---
 

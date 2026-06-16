@@ -161,3 +161,39 @@ def test_build_roc_curve():
     # THEN: Check the AUC value
     assert 'auc' in roc_df.columns
     assert roc_df['auc'].iloc[0] == pytest.approx(0.75)
+
+
+def test_decision_loss():
+    """Tests the decision_loss calculation."""
+    df = pd.DataFrame({
+        'isFraud': [1, 0, 1, 0],
+        'predicted_decision': [1, 1, 0, 0],
+        'amount': [100000, 50000, 200000, 30000]
+    })
+    result = decision_loss(df, 'predicted_decision', cost_fp=50000)
+    assert result['loss'] == 250000.0
+    assert result['loss_fn'] == 200000.0
+    assert result['loss_fp'] == 50000.0
+    assert result['tp'] == 1
+    assert result['fp'] == 1
+    assert result['fn'] == 1
+    assert result['tn'] == 1
+
+
+def test_build_lift_curve():
+    """Tests the build_lift_curve function."""
+    df = pd.DataFrame({
+        'prob': [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.05],
+        'isFraud': [1, 1, 0, 1, 0, 0, 0, 0, 0, 0]
+    })
+    lift_df = build_lift_curve(df, n_bins=2)
+    assert 'cumulative_lift' in lift_df.columns
+    assert len(lift_df) == 2
+
+
+def test_build_lift_curve_errors():
+    with pytest.raises(ValueError, match="n_bins must be >= 2"):
+        build_lift_curve(pd.DataFrame({'prob': [1], 'isFraud': [1]}), n_bins=1)
+
+    with pytest.raises(ValueError, match="Missing columns for lift curve"):
+        build_lift_curve(pd.DataFrame({'prob': [1]}), n_bins=2)
